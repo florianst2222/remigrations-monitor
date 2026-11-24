@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remigrations-Monitor</title>
+<link rel="stylesheet" href="monitor.css">
+<style>body{margin:0;padding:0 16px}</style>
+</head>
+<body>
+<div id="remigration-monitor" class="rm">
+  <header class="rm-head">
+    <h1 class="rm-title">Remigrations-Monitor</h1>
+    <p class="rm-lead" id="rm-lead">Wie viele Drittstaatsangehörige müssen Europa verlassen – und wie viele werden tatsächlich zurückgeführt? Zahlen für Österreich und alle EU-Staaten.</p>
+  </header>
+
+  <div class="rm-kpis" id="rm-kpis"></div>
+
+  <section class="rm-sec" id="rm-luecke">
+    <div class="rm-sec-head">
+      <h2>Die Vollzugslücke in Europa</h2>
+      <p>Anteil der Ausreisepflichtigen, die im selben Jahr <b>nicht</b> zurückgeführt wurden. Klick auf ein Land zeigt den Verlauf.</p>
+    </div>
+    <div class="rm-mapbox">
+      <svg id="rm-map" class="rm-map" role="img" aria-label="Europakarte: Anteil nicht vollzogener Ausreiseverpflichtungen je Staat"></svg>
+      <div class="rm-tip" id="rm-tip" hidden></div>
+      <div class="rm-yearbadge" id="rm-yearbadge" aria-hidden="true"></div>
+      <div class="rm-loading" id="rm-loading">Daten werden geladen …</div>
+    </div>
+    <div class="rm-legend" id="rm-legend"></div>
+    <div class="rm-time">
+      <button type="button" id="rm-play" class="rm-play" aria-label="Zeitraffer abspielen"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="rm-play-ic" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
+      <input type="range" id="rm-year" min="0" max="11" step="1" value="11" aria-label="Jahr">
+      <output id="rm-year-out" for="rm-year">2025</output>
+    </div>
+
+    <div class="rm-chartcard">
+      <div class="rm-chart-head">
+        <h3 id="rm-chart-title">EU-27: Ausreisepflichtig und zurückgeführt</h3>
+        <label class="rm-select"><span class="rm-sr">Land wählen</span><select id="rm-geo"></select></label>
+      </div>
+      <div class="rm-keys"><span><i class="k-o"></i>zur Ausreise verpflichtet</span><span><i class="k-r"></i>zurückgeführt</span></div>
+      <div class="rm-chart" id="rm-chart"></div>
+      <p class="rm-backlog" id="rm-backlog"></p>
+    </div>
+  </section>
+
+  <section class="rm-sec" id="rm-herkunft">
+    <div class="rm-sec-head">
+      <h2>Welche Herkunftsstaaten nehmen ihre Bürger nicht zurück?</h2>
+      <p id="rm-her-sub">Ausreisepflichtige und Rückführungen nach Staatsangehörigkeit, Summe 2023–2025.</p>
+    </div>
+    <div class="rm-bar-controls">
+      <div class="rm-seg" role="group" aria-label="Gebiet">
+        <button type="button" data-scope="EU27_2020" aria-pressed="true">EU-27</button>
+        <button type="button" data-scope="AT" aria-pressed="false">Österreich</button>
+      </div>
+      <div class="rm-seg" role="group" aria-label="Sortierung">
+        <button type="button" data-sort="o" aria-pressed="true">Meiste Ausreisepflichtige</button>
+        <button type="button" data-sort="q" aria-pressed="false">Niedrigste Quote</button>
+      </div>
+    </div>
+    <div class="rm-table-wrap">
+      <table class="rm-table">
+        <thead><tr><th scope="col">Staatsangehörigkeit</th><th scope="col" class="n">Ausreise&shy;pflichtig</th><th scope="col" class="n rr">Zurück&shy;geführt</th><th scope="col" class="q">Rück&shy;führungs&shy;quote</th></tr></thead>
+        <tbody id="rm-her-body"></tbody>
+      </table>
+    </div>
+    <button type="button" class="rm-more" id="rm-her-more">Alle Staaten anzeigen</button>
+    <p class="rm-note"><span class="rm-badge safe">EU-Liste</span> sicherer Herkunftsstaat laut Verordnung (EU) 2026/464 · <span class="rm-badge ra">Abkommen</span> formelles EU-Rückübernahmeabkommen. Staaten mit weniger als <span id="rm-her-min">1.500</span> Ausreisepflichtigen im Zeitraum sind nicht gelistet.</p>
+  </section>
+
+  <section class="rm-sec" id="rm-oesterreich">
+    <div class="rm-sec-head">
+      <h2>Österreich im Detail</h2>
+      <p>Alle Ausreisen 2025 laut Bundesamt für Fremdenwesen und Asyl (BFA) – einschließlich EU-Bürger.</p>
+    </div>
+    <div id="rm-at"></div>
+  </section>
+
+  <section class="rm-sec" id="rm-kosten">
+    <div class="rm-sec-head">
+      <h2>Was kostet der Nicht-Vollzug?</h2>
+      <p>Modellrechnung: Versorgungskosten für Ausreisepflichtige, die nicht zurückgeführt werden. Alle Annahmen sind veränderbar.</p>
+    </div>
+    <div class="rm-calc">
+      <div class="rm-calc-in">
+        <label class="rm-field"><span>Personen</span><input type="number" id="rm-c-n" min="0" step="10" inputmode="numeric"></label>
+        <p class="rm-hint" id="rm-c-n-hint"></p>
+        <fieldset class="rm-field">
+          <legend>Kosten pro Person und Tag</legend>
+          <label class="rm-radio"><input type="radio" name="rm-c-k" value="25" checked> <span><b>25 €</b> Tagsatz organisierte Unterkunft (Länder)</span></label>
+          <label class="rm-radio"><input type="radio" name="rm-c-k" value="147.8"> <span><b>147,80 €</b> Gesamtkosten Bundesbetreuung (2024)</span></label>
+          <label class="rm-radio"><input type="radio" name="rm-c-k" value="x"> <span>eigener Wert <input type="number" id="rm-c-x" min="0" step="1" value="40" aria-label="Eigener Tagessatz in Euro"> €</span></label>
+        </fieldset>
+        <label class="rm-field"><span>Dauer: <b id="rm-c-m-out">12 Monate</b></span><input type="range" id="rm-c-m" min="1" max="36" value="12"></label>
+      </div>
+      <div class="rm-calc-out" aria-live="polite">
+        <span class="rm-calc-label">Kosten</span>
+        <strong id="rm-c-sum">–</strong>
+        <span class="rm-calc-sub" id="rm-c-sub"></span>
+      </div>
+    </div>
+    <p class="rm-note">Nicht alle Ausreisepflichtigen beziehen Grundversorgung, manche sind untergetaucht oder in Haft. Die Rechnung zeigt eine Größenordnung, keine Abrechnung. Quellen: asyl.at / Land Steiermark (Tagsatz 25 €), Budgetdienst des Parlaments, UG 18 Fremdenwesen, Stand 2026 (147,80 €).</p>
+  </section>
+
+  <section class="rm-sec" id="rm-politik">
+    <div class="rm-sec-head">
+      <h2>Was die EU beschlossen hat – und wie Petra Steger abgestimmt hat</h2>
+      <p>Die wichtigsten Rückführungs- und Asylgesetze der laufenden Wahlperiode.</p>
+    </div>
+    <div class="rm-tracker" id="rm-tracker"></div>
+  </section>
+
+  <details class="rm-method">
+    <summary>Quellen und Methodik</summary>
+    <div>
+      <p><strong>Ausreisepflichtig</strong> = Drittstaatsangehörige, gegen die im Jahr eine Rückkehrentscheidung oder Ausreiseanordnung ergangen ist (Eurostat migr_eiord). <strong>Zurückgeführt</strong> = Drittstaatsangehörige, die nach einer solchen Anordnung tatsächlich ausgereist sind, zwangsweise oder freiwillig (migr_eirtn). Beide Zahlen zählen Fälle, nicht Personen; eine Person kann mehrere Anordnungen erhalten. Rückführungen eines Jahres können auf Anordnungen früherer Jahre beruhen, deshalb kann die Quote über 100 % liegen.</p>
+      <p><strong>Nicht vollzogen</strong> = 1 − Zurückgeführte ÷ Ausreisepflichtige im selben Jahr. <strong>Rückstau</strong> = Summe der Anordnungen minus Summe der Rückführungen seit 2014; das ist eine Obergrenze, keine Personenzahl.</p>
+      <p><strong>Österreich im Detail:</strong> BFA, Detailstatistik Kennzahlen Jahr 2025 (Stand März 2026). Die BFA-Zahlen umfassen auch EU-Bürger und weichen daher von Eurostat ab.</p>
+      <p><strong>Gesetzgebung und Abstimmungen:</strong> Rat der EU, Europäisches Parlament, namentliche Abstimmungen über HowTheyVote.eu.</p>
+      <p class="rm-stand" id="rm-stand"></p>
+    </div>
+  </details>
+</div>
+<script src="monitor.js" defer></script>
+</body>
+</html>
