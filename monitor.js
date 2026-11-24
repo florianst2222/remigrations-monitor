@@ -216,7 +216,7 @@
       s += '<g class="yr"><text x="' + cx + '" y="' + (H - B + 17) + '" text-anchor="middle">' + (small ? "'" + String(YEARS[k]).slice(2) : YEARS[k]) + '</text></g>';
       s += '<g class="q"><text x="' + cx + '" y="' + (H - B + 36) + '" text-anchor="middle"' + (small ? ' font-size="11"' : '') + '>' + (rate(o, r) == null ? '' : (small ? String(Math.round(rate(o, r))) : pct(rate(o, r)))) + '</text></g>';
     }
-    s += '<text x="0" y="' + (H - B + 36) + '" font-size="11" fill="#6b7280">' + (small ? 'Quote %' : 'Quote') + '</text>';
+    s += '<text x="0" y="' + (H - B + 36) + '" font-size="11" fill="#6b7280">' + (small ? '%' : 'Quote') + '</text>';
     s += '</svg><div class="ctip" hidden></div>';
     el.innerHTML = s;
     var tip = el.querySelector('.ctip');
