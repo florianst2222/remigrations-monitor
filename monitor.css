@@ -115,7 +115,7 @@
 .rm-qbar .f { display: block; height: 100%; background: var(--rm-blue); border-radius: 4px; }
 .rm-qbar .f.low { background: var(--rm-red); }
 .rm-qbar b { min-width: 3.4em; text-align: right; font-size: 13.5px; }
-.rm-badge { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .01em; padding: 2px 6px; border-radius: 5px; margin-left: 6px; vertical-align: 1px; white-space: nowrap; }
+.rm-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .01em; padding: 2px 6px; border-radius: 5px; margin-left: 6px; vertical-align: 1px; white-space: nowrap; }
 .rm-badge.safe { background: #fdecea; color: #9f1018; }
 .rm-badge.ra { background: #e7eefa; color: var(--rm-blue-ink); }
 .rm-more { margin-top: 10px; font: inherit; font-size: 14px; font-weight: 600; background: none; border: 1px solid var(--rm-line); border-radius: 999px; padding: 8px 16px; cursor: pointer; color: var(--rm-blue-ink); }
@@ -196,7 +196,7 @@
   .rm-law { grid-template-columns: 1fr; }
   .rm-law li { grid-template-columns: 1fr auto; }
   .rm-law li time { grid-column: 1 / -1; }
-  .rm-legend { font-size: 10.5px; }
+  .rm-legend { font-size: 11px; }
   .rm-legend .x { grid-column: 1 / -1; margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
